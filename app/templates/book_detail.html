@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ book.title }} - Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="main-container">
+
+    <a href="{{ url_for('main_routes.index') }}" class="back-link">← Back to Book List</a>
+    <h1>{{ book.title }}</h1>
+    
+    <div class="analysis-grid">
+        
+        <div class="left-panel">
+            
+            <div class="chart-container">
+                <h3 style="text-align: center;">Sentiment Distribution (Sentence-Level)</h3>
+                <canvas id="sentimentChart"></canvas>
+            </div>
+
+            <div class="summary-box">
+                <h3>Average Sentiment Score</h3>
+                <p style="font-size: 24px;">
+                    <strong>
+                        {% if average_score > 0 %}
+                            <span class="score-positive">{{ average_score }}</span>
+                        {% elif average_score < 0 %}
+                            <span class="score-negative">{{ average_score }}</span>
+                        {% else %}
+                            <span class="score-neutral">{{ average_score }}</span>
+                        {% endif %}
+                    </strong>
+                </p>
+
+                <p><strong>Overall Interpretation:</strong>
+                {% if average_score > 0 %}
+                    <span class="score-positive">Positive</span>
+                {% elif average_score < 0 %}
+                    <span class="score-negative">Negative</span>
+                {% else %}
+                    <span class="score-neutral">Neutral</span>
+                {% endif %}
+                </p>
+                
+                <hr>
+
+                <h4>Percentage Breakdown</h4>
+                <ul>
+                    <li>Positive: <span class="score-positive">{{ percentages.Positive }}%</span></li>
+                    <li>Neutral: <span class="score-neutral">{{ percentages.Neutral }}%</span></li>
+                    <li>Negative: <span class="score-negative">{{ percentages.Negative }}%</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            
+            <h2>Book Description</h2>
+            <p style="text-align: justify; padding: 10px; border: 1px solid #eee; border-radius: 4px;">
+                {{ book.description }}
+            </p>
+            
+            <h2 style="margin-top: 40px;">Sentence-level Analysis Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sentence</th>
+                        <th>Sentiment</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                    <tr>
+                        <td>{{ r.sentence }}</td>
+                        {% if r.sentiment == 'Positive' %}
+                             <td class="score-positive">{{ r.sentiment }}</td>
+                        {% elif r.sentiment == 'Negative' %}
+                             <td class="score-negative">{{ r.sentiment }}</td>
+                        {% else %}
+                             <td class="score-neutral">{{ r.sentiment }}</td>
+                        {% endif %}
+                        <td>{{ r.score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('sentimentChart').getContext('2d');
+        
+        const percentages = {
+            positive: {{ percentages.Positive }},
+            neutral: {{ percentages.Neutral }},
+            negative: {{ percentages.Negative }}
+        };
+
+        const sentimentChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Positive', 'Neutral', 'Negative'],
+                datasets: [{
+                    label: 'Sentiment Distribution',
+                    data: [percentages.positive, percentages.neutral, percentages.negative],
+                    backgroundColor: [
+                        'rgba(32, 201, 151, 0.9)', // Soft Green
+                        'rgba(108, 117, 125, 0.9)', // Soft Gray/Neutral
+                        'rgba(253, 126, 20, 0.9)'  // Soft Orange/Negative
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: false,
+                    }
+                },
+                layout: {
+                    padding: 10
+                }
+            },
+        });
+    </script>
+</div>
+</body>
+</html>

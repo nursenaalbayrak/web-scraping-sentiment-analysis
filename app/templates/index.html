@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Sentiment Analysis Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="main-container">
+
+    <h1>Book Sentiment Overview</h1>
+
+    <h2>Top 3 Positive Books</h2>
+    <ul>
+    {% for b in top_positive %}
+        <li class="book-card">
+            <strong>{{ b.title }}</strong> 
+            <span class="score-positive">Score: {{ b.average_score }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <h2>Top 3 Negative Books</h2>
+    <ul>
+    {% for b in top_negative %}
+        <li class="book-card">
+            <strong>{{ b.title }}</strong> 
+            <span class="score-negative">Score: {{ b.average_score }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <hr style="margin-top: 40px; margin-bottom: 40px;">
+
+    <h2>All Books</h2>
+    <ul>
+    {% for book in books %}
+        <li class="book-card">
+            <div>
+                <strong>{{ book.title }}</strong> 
+                {% if book.average_score > 0 %}
+                    <span class="score-positive">({{ book.average_score }})</span>
+                {% elif book.average_score < 0 %}
+                    <span class="score-negative">({{ book.average_score }})</span>
+                {% else %}
+                    <span class="score-neutral">({{ book.average_score }})</span>
+                {% endif %}
+            </div>
+            <a href="{{ url_for('main_routes.book_detail', url=book.url) }}">View Details</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+</div>
+</body>
+</html>
