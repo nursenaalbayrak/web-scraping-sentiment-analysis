@@ -28,6 +28,13 @@
                     <strong>
                         {% if average_score > 0 %}
                             <span class="score-positive">{{ average_score }}</span>
+                            {% if language != "en" %}
+<div style="background:#fff3cd;padding:10px;border-radius:6px;margin-bottom:15px;">
+⚠️ This book description is not in English. Sentiment results may be unreliable.
+</div>
+{% endif %}
+
+
                         {% elif average_score < 0 %}
                             <span class="score-negative">{{ average_score }}</span>
                         {% else %}
@@ -91,6 +98,17 @@
             </table>
         </div>
     </div>
+                <h3>Analysis Confidence</h3>
+<p>
+    {% if confidence == "High" %}
+        <span style="color: green;">High Confidence</span>
+    {% elif confidence == "Medium" %}
+        <span style="color: orange;">Medium Confidence</span>
+    {% else %}
+        <span style="color: red;">Low Confidence</span>
+    {% endif %}
+</p>
+
     
     <script>
         const ctx = document.getElementById('sentimentChart').getContext('2d');
@@ -133,6 +151,8 @@
                 }
             },
         });
+
+        
     </script>
 </div>
 </body>

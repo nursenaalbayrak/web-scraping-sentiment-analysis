@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Book Sentiment Analysis Overview</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -8,49 +9,67 @@
 
 <div class="main-container">
 
-    <h1>Book Sentiment Overview</h1>
+    <!-- ===== PAGE HEADER ===== -->
+    <h1>📚 Book Sentiment Overview</h1>
 
-    <h2>Top 3 Positive Books</h2>
+    <a href="{{ url_for('main_routes.overview') }}" style="display:inline-block;margin-bottom:25px;">
+        View Dataset Overview →
+    </a>
+
+    <!-- ===== TOP POSITIVE ===== -->
+    <h2>🌟 Top 3 Positive Books</h2>
     <ul>
-    {% for b in top_positive %}
+        {% for b in top_positive %}
         <li class="book-card">
-            <strong>{{ b.title }}</strong> 
+            <strong>{{ b.title }}</strong>
             <span class="score-positive">Score: {{ b.average_score }}</span>
         </li>
-    {% endfor %}
+        {% endfor %}
     </ul>
 
-    <h2>Top 3 Negative Books</h2>
+    <!-- ===== TOP NEGATIVE ===== -->
+    <h2>⚠️ Top 3 Negative Books</h2>
     <ul>
-    {% for b in top_negative %}
+        {% for b in top_negative %}
         <li class="book-card">
-            <strong>{{ b.title }}</strong> 
+            <strong>{{ b.title }}</strong>
             <span class="score-negative">Score: {{ b.average_score }}</span>
         </li>
-    {% endfor %}
+        {% endfor %}
     </ul>
 
-    <hr style="margin-top: 40px; margin-bottom: 40px;">
+    <hr style="margin:40px 0;">
 
-    <h2>All Books</h2>
-    <ul>
+    <!-- ===== ALL BOOKS ===== -->
+    <h2>📚 All Books</h2>
+
+<div class="book-grid">
     {% for book in books %}
-        <li class="book-card">
-            <div>
-                <strong>{{ book.title }}</strong> 
-                {% if book.average_score > 0 %}
-                    <span class="score-positive">({{ book.average_score }})</span>
-                {% elif book.average_score < 0 %}
-                    <span class="score-negative">({{ book.average_score }})</span>
-                {% else %}
-                    <span class="score-neutral">({{ book.average_score }})</span>
-                {% endif %}
-            </div>
-            <a href="{{ url_for('main_routes.book_detail', url=book.url) }}">View Details</a>
-        </li>
-    {% endfor %}
-    </ul>
+    <div class="book-card-grid">
+        
+        <img src="{{ book.image }}" alt="{{ book.title }}"
+             onerror="this.style.display='none'">
 
+        <div class="book-info">
+            <h3>{{ book.title }}</h3>
+
+            {% if book.average_score > 0 %}
+                <span class="score-positive">Score: {{ book.average_score }}</span>
+            {% elif book.average_score < 0 %}
+                <span class="score-negative">Score: {{ book.average_score }}</span>
+            {% else %}
+                <span class="score-neutral">Score: {{ book.average_score }}</span>
+            {% endif %}
+
+            <a href="{{ url_for('main_routes.book_detail', url=book.url) }}"
+               class="details-btn">
+                View Details →
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
 </div>
+
 </body>
 </html>

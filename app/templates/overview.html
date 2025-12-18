@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dataset Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="main-container">
+
+    <a href="{{ url_for('main_routes.index') }}" class="back-link">
+        ← Back to Book List
+    </a>
+
+    <h1>Dataset Sentiment Overview</h1>
+
+    <p>
+        This page presents a global sentiment analysis over the entire book dataset.
+        Instead of focusing on a single book, we analyze sentiment trends at dataset level.
+    </p>
+
+    <hr>
+
+    <h2>Dataset Summary</h2>
+    <div class="kpi-grid">
+
+    <div class="kpi-card">
+        <h3>Total Books</h3>
+        <p class="kpi-value">{{ total_books }}</p>
+    </div>
+
+    <div class="kpi-card">
+        <h3>Average Score</h3>
+        <p class="kpi-value">{{ avg_score }}</p>
+    </div>
+
+    <div class="kpi-card positive">
+        <h3>Positive</h3>
+        <p class="kpi-value">{{ positive_count }}</p>
+    </div>
+
+    <div class="kpi-card neutral">
+        <h3>Neutral</h3>
+        <p class="kpi-value">{{ neutral_count }}</p>
+    </div>
+
+    <div class="kpi-card negative">
+        <h3>Negative</h3>
+        <p class="kpi-value">{{ negative_count }}</p>
+    </div>
+
+</div>
+
+    <ul>
+        <li><strong>Total Books:</strong> {{ total_books }}</li>
+        <li><strong>Average Sentiment Score:</strong> {{ avg_score }}</li>
+        <li><strong>Positive Books:</strong> {{ positive_count }}</li>
+        <li><strong>Neutral Books:</strong> {{ neutral_count }}</li>
+        <li><strong>Negative Books:</strong> {{ negative_count }}</li>
+    </ul>
+
+    <div style="max-width:400px;margin-top:30px;">
+        <canvas id="overviewChart"></canvas>
+    </div>
+
+    <hr>
+
+    <h2>Extreme Sentiment Cases</h2>
+
+    {% if best_book %}
+        <p>
+            🌟 <strong>Most Positive Book:</strong>
+            {{ best_book.title }} ({{ best_book.average_score }})
+        </p>
+    {% endif %}
+
+    {% if worst_book %}
+        <p>
+            ⚠️ <strong>Most Negative Book:</strong>
+            {{ worst_book.title }} ({{ worst_book.average_score }})
+        </p>
+    {% endif %}
+
+</div>
+
+<script>
+const ctx = document.getElementById('overviewChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Positive', 'Neutral', 'Negative'],
+        datasets: [{
+            data: [
+                {{ positive_count }},
+                {{ neutral_count }},
+                {{ negative_count }}
+            ],
+            backgroundColor: [
+                '#16a34a',
+                '#6b7280',
+                '#dc2626'
+            ]
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
