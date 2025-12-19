@@ -1,2 +1,2 @@
 # web-scraping-sentiment-analysis
-“Kullanıcı yorumlarını internetten çekip, olumlu/olumsuz olarak sınıflandıran web tabanlı bir sistem”
+“Web Scraping ve Kural Tabanlı Doğal Dil İşleme Kullanarak Kitap Açıklamalarının Duygu Analizini yapan bir sistem geliştirilmiştir”
